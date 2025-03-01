@@ -11,20 +11,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-    // ทำให้ HotelAccessGUI เป็น static class
-    public  class HotelAccessGUI extends JFrame {
-        public HotelAccessGUI() {
-            setTitle("Admin Panel");
-            setSize(600, 400);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setLocationRelativeTo(null);
-            setVisible(true);
-        }
-
-        public static void main(String[] args) {
-            SwingUtilities.invokeLater(HotelAccessGUI::new);
-        }
+// ทำให้ HotelAccessGUI เป็น static class
+public  class HotelAccessGUI extends JFrame {
+    public HotelAccessGUI() {
+        setTitle("Admin Panel");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(HotelAccessGUI::new);
+    }
+}
 
 class MainFrame extends JFrame {
     private final DefaultTableModel tableModel;
@@ -134,15 +134,11 @@ class MainFrame extends JFrame {
 
         setVisible(true);
     }
-    private void acceptBooking(String bookingID) {
-        updateBookingStatus(bookingID, "Accepted");
-        JOptionPane.showMessageDialog(null, "การจอง " + bookingID + " ได้รับการยอมรับแล้ว!", "สำเร็จ", JOptionPane.INFORMATION_MESSAGE);
-    }
+
     public void approveBooking(String bookingID) {
         System.out.println("Booking Approved: " + bookingID);
         JOptionPane.showMessageDialog(this, "Booking " + bookingID + " has been approved!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
-
 
     private void rejectBooking(String bookingID) {
         updateBookingStatus(bookingID, "Rejected");
@@ -177,8 +173,6 @@ class MainFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
-
 
 
     private void loadBookings() {
@@ -440,5 +434,4 @@ class MainFrame extends JFrame {
 
 
 
-    }
-
+}

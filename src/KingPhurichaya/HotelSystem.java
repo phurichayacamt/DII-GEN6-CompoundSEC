@@ -22,8 +22,8 @@ class MainMenu extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(2, 1, 10, 10));
 
-        customerButton = new JButton("Customer Panel");
-        adminButton = new JButton("Admin Panel");
+        customerButton = new JButton("Customer ");
+        adminButton = new JButton("Admin ");
 
         customerButton.setBackground(new Color(30, 144, 255));
         customerButton.setForeground(Color.BLACK);
