@@ -28,6 +28,7 @@ class ButtonRenderer extends JPanel implements TableCellRenderer {
         add(lockButton);
     }
 
+
     private JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(70, 30)); // Changed from 15 to 30 to match Editor

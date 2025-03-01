@@ -6,6 +6,10 @@ import java.awt.event.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
     // ทำให้ HotelAccessGUI เป็น static class
     public  class HotelAccessGUI extends JFrame {
@@ -22,7 +26,6 @@ import java.time.format.DateTimeFormatter;
         }
     }
 
-
 class MainFrame extends JFrame {
     private final DefaultTableModel tableModel;
     private final JTable table;
@@ -34,6 +37,8 @@ class MainFrame extends JFrame {
     private final DefaultListModel<String> logListModel;
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
+    private JButton confirmButton;
+
 
     private static final String AUDIT_LOG_FILE = "audit_log.csv";
 
@@ -55,13 +60,20 @@ class MainFrame extends JFrame {
         JButton dashboardButton = createStyledButton("Dashboard");
         JButton cardMgmtButton = createStyledButton("Card Management");
         JButton auditLogButton = createStyledButton("Audit Log");
+        JButton viewBookingsButton = createStyledButton("View Bookings");
         JButton exitButton = createStyledButton("Exit Program");
-
+        BookingManager bookingManager = new BookingManager();
+        viewBookingsButton.addActionListener(e -> bookingManager.loadBookings()); // ✅ ใส่ event
+        navPanel.add(viewBookingsButton); // ✅ เพิ่มปุ่มเข้า Panel
+        viewBookingsButton.addActionListener(e -> loadBookings());
+        add(viewBookingsButton);
         exitButton.addActionListener(e -> System.exit(0));  // ปุ่มออกจากโปรแกรม
+
 
         navPanel.add(dashboardButton);
         navPanel.add(cardMgmtButton);
         navPanel.add(auditLogButton);
+        navPanel.add(viewBookingsButton);
         navPanel.add(exitButton);  // เพิ่มปุ่มออก
 
         panel.add(navPanel, BorderLayout.NORTH);
@@ -122,6 +134,118 @@ class MainFrame extends JFrame {
 
         setVisible(true);
     }
+    private void acceptBooking(String bookingID) {
+        updateBookingStatus(bookingID, "Accepted");
+        JOptionPane.showMessageDialog(null, "การจอง " + bookingID + " ได้รับการยอมรับแล้ว!", "สำเร็จ", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void approveBooking(String bookingID) {
+        System.out.println("Booking Approved: " + bookingID);
+        JOptionPane.showMessageDialog(this, "Booking " + bookingID + " has been approved!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+    private void rejectBooking(String bookingID) {
+        updateBookingStatus(bookingID, "Rejected");
+        JOptionPane.showMessageDialog(null, "การจอง " + bookingID + " ถูกปฏิเสธ!", "สำเร็จ", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // ฟังก์ชันสำหรับอัปเดตสถานะการจองในไฟล์ CSV
+    private void updateBookingStatus(String bookingID, String newStatus) {
+        String filePath = "bookings.csv";
+        List<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length > 0 && parts[0].equals(bookingID)) {
+                    parts[5] = newStatus; // สมมติว่า column 5 เป็นสถานะการจอง
+                    line = String.join(",", parts);
+                }
+                updatedLines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (String updatedLine : updatedLines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    private void loadBookings() {
+        StringBuilder bookings = new StringBuilder("Customer Bookings:\n");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("bookings.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                bookings.append(line).append("\n");
+            }
+            JOptionPane.showMessageDialog(this, bookings.toString(), "Bookings", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadBookingsTable() {
+        String[] columnNames = {"Booking ID", "Customer Name", "Room", "Check-in Date", "Check-out Date", "Status", "Actions"};
+        DefaultTableModel bookingsTableModel = new DefaultTableModel(columnNames, 0);
+        JTable bookingsTable = new JTable(bookingsTableModel);
+        JScrollPane scrollPane = new JScrollPane(bookingsTable);
+
+        File file = new File("bookings.csv");
+        if (!file.exists()) {
+            JOptionPane.showMessageDialog(this, "No bookings found!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    bookingsTableModel.addRow(new Object[]{parts[0], parts[1], parts[2], parts[3], parts[4], "Pending", "Approve | Reject"});
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        bookingsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = bookingsTable.rowAtPoint(e.getPoint());
+                int col = bookingsTable.columnAtPoint(e.getPoint());
+                if (col == 6) { // Actions column
+                    int actionIndex = getClickedActionIndex(bookingsTable, row, col, e.getX());
+                    if (actionIndex == 0) {
+                        String bookingID = (String) bookingsTable.getValueAt(row, 0); // ดึงค่าจากคอลัมน์แรก
+                        approveBooking(bookingID);
+                    } else if (actionIndex == 1) {
+                        String bookingID = (String) bookingsTable.getValueAt(row, 0);
+                        rejectBooking(bookingID);
+                    }
+
+
+                }
+            }
+        });
+
+        JDialog bookingsDialog = new JDialog(this, "Customer Bookings", true);
+        bookingsDialog.setSize(600, 400);
+        bookingsDialog.add(scrollPane);
+        bookingsDialog.setLocationRelativeTo(this);
+        bookingsDialog.setVisible(true);
+    }
+
+
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -279,7 +403,6 @@ class MainFrame extends JFrame {
             System.out.println("No existing audit log found.");
         }
     }
-
     private void updateDashboard() {
         int active = 0, revoked = 0, locked = 0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
@@ -293,4 +416,29 @@ class MainFrame extends JFrame {
         revokedCardsLabel.setText("Revoked Cards: " + revoked);
         lockedCardsLabel.setText("Locked Cards: " + locked);
     }
-}
+//    private void loadBookingsTable() {
+//        String[] columnNames = {"Booking ID", "Customer Name", "Room", "Check-in Date", "Check-out Date", "Status", "Actions"};
+//        DefaultTableModel bookingsTableModel = new DefaultTableModel(columnNames, 0);
+//        JTable bookingsTable = new JTable(bookingsTableModel);
+//        JScrollPane scrollPane = new JScrollPane(bookingsTable);
+//
+//        // โหลดข้อมูลการจองจากไฟล์
+//        try (BufferedReader reader = new BufferedReader(new FileReader("bookings.csv"))) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                String[] parts = line.split(",");
+//                if (parts.length >= 5) {
+//                    bookingsTableModel.addRow(new Object[]{parts[0], parts[1], parts[2], parts[3], parts[4], "Pending", "Approve | Reject"});
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+
+
+
+
+    }
+
