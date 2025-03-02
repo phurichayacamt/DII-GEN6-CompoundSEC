@@ -5,7 +5,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -16,7 +15,9 @@ public class TimeBasedEncryption {
     private static final int GCM_IV_LENGTH = 12; // GCM IV 12 ไบต์
     private static final int GCM_TAG_LENGTH = 128; // ความยาว tag 128 บิต
 
+    //Strategy Pattern → เลือกใช้กลยุทธ์เข้ารหัส-ถอดรหัสที่ต่างกัน
     public static String encrypt(String plainText) {
+        // ซ่อนรายละเอียดการเข้ารหัส AES-GCM //Abstraction
         try {
             // เอา timestamp มาทำเป็น salt
             String timeStamp = String.valueOf(System.currentTimeMillis());
@@ -48,6 +49,7 @@ public class TimeBasedEncryption {
     }
 
     public static String decrypt(String cipherTextWithData) {
+        // ซ่อนรายละเอียดการถอดรหัส
         try {
             String[] parts = cipherTextWithData.split(":", 3);
             if (parts.length != 3) {

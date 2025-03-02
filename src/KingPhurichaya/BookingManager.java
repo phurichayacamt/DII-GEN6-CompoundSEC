@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookingManager {
-    private static final String CSV_FILE = "bookings.csv";
+    private static final String CSV_FILE = "bookings.csv";  // Encapsulation CSV_FILE, model, table ป็น private → ซ่อนจากภายนอก
     private DefaultTableModel model;
     private JTable table;
     private MainFrame mainFrame;
@@ -19,13 +19,13 @@ public class BookingManager {
         this.mainFrame = mainFrame;
     }
 
-//    public void showBookings() {
-//        if (frame != null && frame.isVisible()) {
-//            frame.toFront();
-//            return;
-//        }
-//        loadBookings();
-//    }
+    public void showBookings() {
+        if (frame != null && frame.isVisible()) {
+            frame.toFront();
+            return;
+        }
+        loadBookings();
+    }
 
     public boolean isRoomAlreadyBooked(String room) {
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
@@ -132,7 +132,7 @@ public class BookingManager {
             setOpaque(true);
         }
 
-        @Override
+        @Override //Overriding
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText((value == null) ? "" : value.toString());
             return this;

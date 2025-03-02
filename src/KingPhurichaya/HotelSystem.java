@@ -10,7 +10,7 @@ public class HotelSystem {
     }
 }
 
-class MainMenu extends JFrame {
+class MainMenu extends JFrame { //   Inheritance สืบทอดจาก JFrame
     private final JButton customerButton;
     private final JButton adminButton;
 
@@ -159,17 +159,20 @@ class CustomerGUI extends JFrame {
             roomDropdown.addItem("Room 101");
             roomDropdown.addItem("Room 102");
             roomDropdown.addItem("Room 103");
+            roomDropdown.addItem("Room 104");
         } else if ("2nd Floor".equals(selectedFloor)) {
             roomDropdown.addItem("Room 201");
             roomDropdown.addItem("Room 202");
             roomDropdown.addItem("Room 203");
+            roomDropdown.addItem("Room 204");
         } else if ("3rd Floor".equals(selectedFloor)) {
             roomDropdown.addItem("Room 301");
             roomDropdown.addItem("Room 302");
             roomDropdown.addItem("Room 303");
+            roomDropdown.addItem("Room 304");
+
         }
     }
-
     private void goBackToMainMenu() {
         dispose();
         new MainMenu();

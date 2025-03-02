@@ -14,7 +14,7 @@ public class ActionButtonEditorRenderer {
         table.getColumn("Actions").setCellEditor(new ButtonEditor(tableModel, mainFrame));
     }
 }
-
+//  ใช้ Polymorphism
 //  Renderer - Displays buttons in each row //
 class ButtonRenderer extends JPanel implements TableCellRenderer {
     public ButtonRenderer() {
@@ -28,7 +28,7 @@ class ButtonRenderer extends JPanel implements TableCellRenderer {
         add(lockButton);
 
     }
-
+    // Factory Pattern → ระบบสร้างปุ่ม Edit, Revoke, Lock อัตโนมัติ
     private JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(70, 30)); // Changed from 15 to 30 to match Editor

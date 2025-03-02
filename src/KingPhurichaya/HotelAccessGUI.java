@@ -24,7 +24,7 @@ public class HotelAccessGUI extends JFrame {
 }
 
 // MainFrame เป็นหน้าจอหลักของระบบ Hotel Security System
-class MainFrame extends JFrame {
+class MainFrame extends JFrame { //  Inheritance สืบทอดจาก JFrame
     private final DefaultTableModel tableModel;
     private final JTable table;
     private final DefaultTableModel auditTableModel;
@@ -149,7 +149,7 @@ class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    // อัปเดตสถิติการจอง //
+    // อัปเดตสถิติการจอง //Observer Pattern เมื่ออัปเดตสถิติการจอง ระบบจะแจ้งเตือนให้ UI อัปเดตข้อมูล
     public void updateBookingStats() {
         int approvedCount = 0, rejectedCount = 0;
         File file = new File("bookings.csv");
