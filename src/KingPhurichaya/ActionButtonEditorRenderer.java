@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.EventObject;
 
 public class ActionButtonEditorRenderer {
+    // เหลือ 3 อาร์กิวเมนต์ (JTable, DefaultTableModel, MainFrame)
     public static void addActionButtons(JTable table, DefaultTableModel tableModel, MainFrame mainFrame) {
         table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
         table.getColumn("Actions").setCellEditor(new ButtonEditor(tableModel, mainFrame));
@@ -23,9 +24,11 @@ class ButtonRenderer extends JPanel implements TableCellRenderer {
         JButton revokeButton = createButton("Revoke");
         JButton lockButton = createButton("Lock");
 
+
         add(editButton);
         add(revokeButton);
         add(lockButton);
+
     }
 
 
@@ -93,7 +96,9 @@ class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
             String name = tableModel.getValueAt(row, 1).toString();
             String accessLevel = tableModel.getValueAt(row, 2).toString();
             String status = tableModel.getValueAt(row, 3).toString();
-            String expiryDate = tableModel.getValueAt(row, 4).toString();
+            String encryptedExpiryDate = tableModel.getValueAt(row, 4).toString();
+            String expiryDate = TimeBasedEncryption.decrypt(encryptedExpiryDate);
+
 
             // สร้าง JDialog แบบกำหนดเองแทนการใช้ JOptionPane
             JDialog editDialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(panel), "Edit Card " + cardID, true);
@@ -153,7 +158,10 @@ class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
                 tableModel.setValueAt(nameField.getText(), row, 1);
                 tableModel.setValueAt(accessBox.getSelectedItem(), row, 2);
                 tableModel.setValueAt(statusBox.getSelectedItem(), row, 3);
-                tableModel.setValueAt(expiryField.getText(), row, 4);
+                String newExpiry = expiryField.getText();
+                String encryptedNewExpiry = TimeBasedEncryption.encrypt(newExpiry);
+                tableModel.setValueAt(encryptedNewExpiry, row, 4);
+
 
                 if (mainFrame != null) {
                     mainFrame.logAction("Edited Card", "Card ID: " + cardID);

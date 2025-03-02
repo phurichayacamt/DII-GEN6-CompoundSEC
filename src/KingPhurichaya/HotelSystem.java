@@ -1,9 +1,8 @@
 package src.KingPhurichaya;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class HotelSystem {
     public static void main(String[] args) {
@@ -12,8 +11,8 @@ public class HotelSystem {
 }
 
 class MainMenu extends JFrame {
-    private JButton customerButton;
-    private JButton adminButton;
+    private final JButton customerButton;
+    private final JButton adminButton;
 
     public MainMenu() {
         setTitle("Hotel Security System");
@@ -22,8 +21,8 @@ class MainMenu extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(2, 1, 10, 10));
 
-        customerButton = new JButton("Customer ");
-        adminButton = new JButton("Admin ");
+        customerButton = new JButton("Customer");
+        adminButton = new JButton("Admin");
 
         customerButton.setBackground(new Color(30, 144, 255));
         customerButton.setForeground(Color.BLACK);
@@ -42,7 +41,7 @@ class MainMenu extends JFrame {
 
     private void openCustomerPanel(ActionEvent e) {
         dispose();
-        new CustomerGUI();
+        new CustomerGUI(new MainFrame()); // ✅ ส่ง MainFrame เข้า CustomerGUI
     }
 
     private void openAdminPanel(ActionEvent e) {
@@ -57,8 +56,9 @@ class MainMenu extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             String enteredPassword = new String(passwordField.getPassword());
             if ("admin123".equals(enteredPassword)) {
-                new MainFrame(); // เปิดหน้าแอดมิน
-                dispose(); // ปิด MainMenu หลังจากเปิดหน้าใหม่แล้ว
+                MainFrame mainFrame = new MainFrame(); // ✅ สร้าง MainFrame
+                new BookingManager(mainFrame); // ✅ ส่ง MainFrame เข้าไปใน BookingManager
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Incorrect password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
             }
@@ -67,14 +67,16 @@ class MainMenu extends JFrame {
 }
 
 class CustomerGUI extends JFrame {
-    private JTextField customerNameField;  // ✅ เพิ่มตัวแปรนี้
-    private JComboBox<String> floorDropdown;
-    private JComboBox<String> roomDropdown;
-    private JLabel statusLabel;
-    private JButton confirmButton;
-    private JButton backButton;
+    private final MainFrame mainFrame;
+    private final JTextField customerNameField;
+    private final JComboBox<String> floorDropdown;
+    private final JComboBox<String> roomDropdown;
+    private final JLabel statusLabel;
+    private final JButton confirmButton;
+    private final JButton backButton;
 
-    public CustomerGUI() {
+    public CustomerGUI(MainFrame mainFrame) { // ✅ รับ MainFrame มาใช้
+        this.mainFrame = mainFrame;
         setTitle("Customer Panel");
         setSize(600, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -82,7 +84,6 @@ class CustomerGUI extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel selectionPanel = new JPanel(new GridLayout(4, 2, 10, 10));
-
         selectionPanel.add(new JLabel("Customer Name:"));
         customerNameField = new JTextField();
         selectionPanel.add(customerNameField);
@@ -101,7 +102,6 @@ class CustomerGUI extends JFrame {
         selectionPanel.add(statusLabel);
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-
         confirmButton = new JButton("Confirm Selection");
         confirmButton.setBackground(new Color(34, 139, 34));
         confirmButton.setForeground(Color.BLACK);
@@ -129,19 +129,27 @@ class CustomerGUI extends JFrame {
         String selectedRoom = (String) roomDropdown.getSelectedItem();
 
         if (customerName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter customer name.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter customer name.",
+                    "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
         if (selectedRoom == null) {
-            JOptionPane.showMessageDialog(this, "Please select a room.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a room.",
+                    "Selection Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        saveBooking(customerName, selectedFloor, selectedRoom); // ✅ เพิ่มการบันทึกข้อมูล
-
+        BookingManager bookingManager = new BookingManager(mainFrame); // ✅ ใช้ mainFrame
+        if (bookingManager.isRoomAlreadyBooked(selectedRoom)) {
+            JOptionPane.showMessageDialog(this,
+                    "Room " + selectedRoom + " is already booked!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        bookingManager.addBooking(selectedFloor, selectedRoom, customerName);
         statusLabel.setText("Room " + selectedRoom + " on " + selectedFloor + " is booked by " + customerName);
-        JOptionPane.showMessageDialog(this, "Room booked successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Room booked successfully!",
+                "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void updateRooms() {
@@ -162,15 +170,5 @@ class CustomerGUI extends JFrame {
     private void goBackToMainMenu() {
         dispose();
         new MainMenu();
-    }
-
-    private void saveBooking(String customerName, String floor, String room) { // ✅ บันทึกข้อมูลชื่อผู้จอง
-        try (FileWriter writer = new FileWriter("bookings.csv", true)) {
-            writer.append(customerName).append(",").append(floor).append(",").append(room).append("\n");
-            writer.flush();
-            System.out.println("Booking saved: " + customerName + " - " + floor + " - " + room);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
