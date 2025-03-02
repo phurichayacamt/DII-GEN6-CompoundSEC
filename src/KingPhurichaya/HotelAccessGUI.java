@@ -87,7 +87,7 @@ class MainFrame extends JFrame {
         mainPanel = new JPanel(cardLayout);
         panel.add(mainPanel, BorderLayout.CENTER);
 
-        // ===== Dashboard Panel =====
+        // ===== Dashboard Panel ===== //
         JPanel dashboardPanel = new JPanel(new BorderLayout(0, 20));
         dashboardPanel.setBackground(new Color(220, 230, 240)); // สีพื้นหลังของ Dashboard
 
@@ -114,13 +114,13 @@ class MainFrame extends JFrame {
         dashboardPanel.add(logScrollPane, BorderLayout.CENTER);
         mainPanel.add(dashboardPanel, "Dashboard");
 
-        // ===== Card Management Panel =====
+        // ===== Card Management Panel ===== //
         String[] columnNames = {"Card ID", "Name", "Access Level", "Status", "Expiry Date", "Actions"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(table);
 
-        JButton addCardButton = createStyledButton("Add New Card");
+        JButton addCardButton = createStyledButton(" + Add New Card ! ");
         addCardButton.addActionListener(this::addNewCard);
 
         JPanel cardMgmtPanel = new JPanel(new BorderLayout(0, 20));
@@ -128,7 +128,7 @@ class MainFrame extends JFrame {
         cardMgmtPanel.add(addCardButton, BorderLayout.SOUTH);
         mainPanel.add(cardMgmtPanel, "Card Management");
 
-        // ===== Audit Log Panel =====
+        // ===== Audit Log Panel ===== //
         auditTableModel = new DefaultTableModel(new String[]{"Timestamp", "Action", "Details"}, 0);
         auditTable = new JTable(auditTableModel);
         JScrollPane auditScrollPane = new JScrollPane(auditTable);
@@ -149,7 +149,7 @@ class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    // เมธอดอัปเดตสถิติการจอง
+    // อัปเดตสถิติการจอง //
     public void updateBookingStats() {
         int approvedCount = 0, rejectedCount = 0;
         File file = new File("bookings.csv");
@@ -238,28 +238,28 @@ class MainFrame extends JFrame {
             String expiryDate = expiryField.getText().trim();
 
             if (cardID.isEmpty() || owner.isEmpty() || expiryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+                JOptionPane.showMessageDialog(null, "Please fill out all fields.",
                         "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // ตรวจสอบว่า Card ID ซ้ำหรือไม่
+            // ตรวจสอบว่า Card ID ซ้ำหรือไม่ //
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 String existingCardID = tableModel.getValueAt(i, 0).toString();
                 if (cardID.equals(existingCardID)) {
-                    JOptionPane.showMessageDialog(this, "Card ID นี้ถูกใช้ไปแล้ว",
+                    JOptionPane.showMessageDialog(this, "This Card ID has already been used.",
                             "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
 
             if (!expiryDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
-                JOptionPane.showMessageDialog(this, "กรุณากรอกวันที่ในรูปแบบ YYYY-MM-DD",
+                JOptionPane.showMessageDialog(this, "Please enter the date in YYYY-MM-DD format.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // เข้ารหัส Expiry Date ก่อนบันทึก
+            // เข้ารหัส Expiry Date ก่อนบันทึก //
             String encryptedExpiry = TimeBasedEncryption.encrypt(expiryDate);
 
             tableModel.addRow(new Object[]{
@@ -319,7 +319,7 @@ class MainFrame extends JFrame {
             String accessLevel = tableModel.getValueAt(row, 2).toString();
             String status = tableModel.getValueAt(row, 3).toString();
 
-            // ถอดรหัส Expiry Date
+            // ถอดรหัส Expiry Date //
             String encryptedExpiryDate = tableModel.getValueAt(row, 4).toString();
             String expiryDate = TimeBasedEncryption.decrypt(encryptedExpiryDate);
 
@@ -342,7 +342,7 @@ class MainFrame extends JFrame {
 
             mainPanel.add(new JLabel("Access Level:"));
             JComboBox<String> accessBox = new JComboBox<>(new String[]{
-                    "Admin","Employee","Guest","VIP","Maintenance","Cleaning"
+                    "Admin","Employee","Guest","VIP","Emergency","Cleaning"
             });
             accessBox.setSelectedItem(accessLevel);
             mainPanel.add(accessBox);
@@ -439,7 +439,7 @@ class MainFrame extends JFrame {
         }
     }
 
-    // อัปเดตสถิติบน Dashboard (Active, Revoked, Locked)
+    // อัปเดตสถิติบน Dashboard (Active, Revoked, Locked) //
     public void updateDashboard() {
         int active = 0, revoked = 0, locked = 0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {

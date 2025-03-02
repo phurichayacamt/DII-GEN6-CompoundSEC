@@ -41,7 +41,7 @@ class MainMenu extends JFrame {
 
     private void openCustomerPanel(ActionEvent e) {
         dispose();
-        new CustomerGUI(new MainFrame()); // ✅ ส่ง MainFrame เข้า CustomerGUI
+        new CustomerGUI(new MainFrame()); //  ส่ง MainFrame เข้า CustomerGUI
     }
 
     private void openAdminPanel(ActionEvent e) {
@@ -56,8 +56,8 @@ class MainMenu extends JFrame {
         if (option == JOptionPane.OK_OPTION) {
             String enteredPassword = new String(passwordField.getPassword());
             if ("admin123".equals(enteredPassword)) {
-                MainFrame mainFrame = new MainFrame(); // ✅ สร้าง MainFrame
-                new BookingManager(mainFrame); // ✅ ส่ง MainFrame เข้าไปใน BookingManager
+                MainFrame mainFrame = new MainFrame(); //  สร้าง MainFrame
+                new BookingManager(mainFrame); //  ส่ง MainFrame เข้าไปใน BookingManager
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Incorrect password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
@@ -75,7 +75,7 @@ class CustomerGUI extends JFrame {
     private final JButton confirmButton;
     private final JButton backButton;
 
-    public CustomerGUI(MainFrame mainFrame) { // ✅ รับ MainFrame มาใช้
+    public CustomerGUI(MainFrame mainFrame) { // รับ MainFrame มาใช้
         this.mainFrame = mainFrame;
         setTitle("Customer Panel");
         setSize(600, 350);
@@ -139,7 +139,7 @@ class CustomerGUI extends JFrame {
             return;
         }
 
-        BookingManager bookingManager = new BookingManager(mainFrame); // ✅ ใช้ mainFrame
+        BookingManager bookingManager = new BookingManager(mainFrame); // ใช้ mainFrame
         if (bookingManager.isRoomAlreadyBooked(selectedRoom)) {
             JOptionPane.showMessageDialog(this,
                     "Room " + selectedRoom + " is already booked!",
@@ -149,7 +149,7 @@ class CustomerGUI extends JFrame {
         bookingManager.addBooking(selectedFloor, selectedRoom, customerName);
         statusLabel.setText("Room " + selectedRoom + " on " + selectedFloor + " is booked by " + customerName);
         JOptionPane.showMessageDialog(this, "Room booked successfully!",
-                "Success", JOptionPane.INFORMATION_MESSAGE);
+                "Success!", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void updateRooms() {
@@ -158,12 +158,15 @@ class CustomerGUI extends JFrame {
         if ("1st Floor".equals(selectedFloor)) {
             roomDropdown.addItem("Room 101");
             roomDropdown.addItem("Room 102");
+            roomDropdown.addItem("Room 103");
         } else if ("2nd Floor".equals(selectedFloor)) {
             roomDropdown.addItem("Room 201");
             roomDropdown.addItem("Room 202");
+            roomDropdown.addItem("Room 203");
         } else if ("3rd Floor".equals(selectedFloor)) {
             roomDropdown.addItem("Room 301");
             roomDropdown.addItem("Room 302");
+            roomDropdown.addItem("Room 303");
         }
     }
 

@@ -1,12 +1,13 @@
-1st Floor,Room 102,Approved,Approved
+1st Floor,Room 102,Approved,Rejected
 1st Floor,Room 101,Rejected,Rejected
-1st Floor,Room 101,Approved,Pending
-3rd Floor,Room 301,Rejected,Pending
-king,1st Floor,Room 101,Pending
-hhh,2nd Floor,Approved,Pending
-big,2nd Floor,Approved,Pending
-fff,3rd Floor,Room 301,Pending
-หหหหห,1st Floor,Room 101,Pending
-2nd Floor,Room 202,Rejected,Pending
-3rd Floor,Room 302,ก,Pending
-2nd Floor,Room 201,พำำำ,Pending
+1st Floor,Room 101,Approved,Rejected
+3rd Floor,Room 301,Rejected,Rejected
+king,1st Floor,Room 101,Rejected
+hhh,2nd Floor,Approved,Rejected
+big,2nd Floor,Approved,Rejected
+fff,3rd Floor,Room 301,Rejected
+หหหหห,1st Floor,Room 101,Rejected
+2nd Floor,Room 202,Rejected,Rejected
+3rd Floor,Room 302,ก,Rejected
+2nd Floor,Room 201,พำำำ,Rejected
+3rd Floor,Room 303,ddd,Pending
