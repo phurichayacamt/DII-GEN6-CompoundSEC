@@ -19,13 +19,13 @@ public class BookingManager {
         this.mainFrame = mainFrame;
     }
 
-    public void showBookings() {
-        if (frame != null && frame.isVisible()) {
-            frame.toFront();
-            return;
-        }
-        loadBookings();
-    }
+//    public void showBookings() {
+//        if (frame != null && frame.isVisible()) {
+//            frame.toFront();
+//            return;
+//        }
+//        loadBookings();
+//    }
 
     public boolean isRoomAlreadyBooked(String room) {
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
