@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+//คลาสที่ใช้เข้ารหัสและถอดรหัสข้อมูลโดยอ้างอิงตาม Timestamp
 public class TimeBasedEncryption {
     private static final String SECRET = "MySuperSecretKey"; // Key สำหรับผสมกับ timestamp
     private static final int ITERATIONS = 65536;

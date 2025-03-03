@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//Multi-Facade
 public class BookingManager {
     private static final String CSV_FILE = "bookings.csv";  // Encapsulation CSV_FILE, model, table ป็น private → ซ่อนจากภายนอก
     private DefaultTableModel model;

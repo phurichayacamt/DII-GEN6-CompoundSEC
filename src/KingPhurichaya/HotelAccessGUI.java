@@ -196,7 +196,7 @@ class MainFrame extends JFrame { //  Inheritance สืบทอดจาก JFr
     }
 
     private void addNewCard(ActionEvent e) {
-        // Map ระบุ Accessible Floors ตาม Access Level
+        // ระบุ Accessible Floors ตาม Access Level
         Map<String, String> accessFloorsMap = new HashMap<>();
         accessFloorsMap.put("Admin", "Low, Medium, High");
         accessFloorsMap.put("Employee", "Low, Medium");
@@ -307,7 +307,7 @@ class MainFrame extends JFrame { //  Inheritance สืบทอดจาก JFr
         }
         return -1;
     }
-
+    //  editCard
     private void editCard(int row) {
         if (row < 0 || row >= tableModel.getRowCount()) {
             JOptionPane.showMessageDialog(null, "Invalid row selected.");

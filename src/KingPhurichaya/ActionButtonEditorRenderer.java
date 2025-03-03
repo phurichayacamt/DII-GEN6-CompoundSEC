@@ -20,20 +20,39 @@ class ButtonRenderer extends JPanel implements TableCellRenderer {
     public ButtonRenderer() {
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0)); // Set spacing between buttons
 
-        JButton editButton = createButton("Edit");
-        JButton revokeButton = createButton("Revoke");
-        JButton lockButton = createButton("Lock");
-        add(editButton);
-        add(revokeButton);
-        add(lockButton);
+        JButton editButton = ButtonFactory.createButton("Edit");
+        JButton revokeButton = ButtonFactory.createButton("Revoke");
+        JButton lockButton = ButtonFactory.createButton("Lock");
+
 
     }
     // Factory Pattern → ระบบสร้างปุ่ม Edit, Revoke, Lock อัตโนมัติ
-    private JButton createButton(String text) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(70, 30)); // Changed from 15 to 30 to match Editor
-        return button;
+    public class ButtonFactory {
+        public static JButton createButton(String type) {
+            JButton button;
+
+            switch (type) {
+                case "Edit":
+                    button = new JButton("Edit");
+                    button.setBackground(Color.BLUE);
+                    break;
+                case "Revoke":
+                    button = new JButton("Revoke");
+                    button.setBackground(Color.RED);
+                    break;
+                case "Lock":
+                    button = new JButton("Lock");
+                    button.setBackground(Color.GRAY);
+                    break;
+                default:
+                    button = new JButton("Default");
+            }
+
+            button.setPreferredSize(new Dimension(70, 30));
+            return button;
+        }
     }
+
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
