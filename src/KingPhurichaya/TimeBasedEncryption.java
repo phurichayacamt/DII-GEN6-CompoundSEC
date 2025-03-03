@@ -8,6 +8,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+
+// TimeBasedEncryption ใช้ AES-GCM เพื่อเข้ารหัสและถอดรหัสวันหมดอายุของบัตร
+// ใช้ Timestamp เป็น Salt เพื่อป้องกันการเดารหัส
 //คลาสที่ใช้เข้ารหัสและถอดรหัสข้อมูลโดยอ้างอิงตาม Timestamp
 public class TimeBasedEncryption {
     private static final String SECRET = "MySuperSecretKey"; // Key สำหรับผสมกับ timestamp

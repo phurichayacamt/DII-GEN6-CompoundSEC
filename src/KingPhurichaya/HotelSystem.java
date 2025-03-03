@@ -24,10 +24,10 @@ class MainMenu extends JFrame { //   Inheritance สืบทอดจาก JFr
         customerButton = new JButton("Customer");
         adminButton = new JButton("Admin");
 
-        customerButton.setBackground(new Color(30, 144, 255));
+        customerButton.setBackground(new Color(231, 203, 203));
         customerButton.setForeground(Color.BLACK);
 
-        adminButton.setBackground(new Color(220, 20, 60));
+        adminButton.setBackground(new Color(231, 203, 203));
         adminButton.setForeground(Color.BLACK);
 
         customerButton.addActionListener(this::openCustomerPanel);
@@ -103,12 +103,12 @@ class CustomerGUI extends JFrame {
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         confirmButton = new JButton("Confirm Selection");
-        confirmButton.setBackground(new Color(34, 139, 34));
+        confirmButton.setBackground(new Color(231, 203, 203));
         confirmButton.setForeground(Color.BLACK);
         confirmButton.addActionListener(e -> confirmSelection());
 
         backButton = new JButton("Back to Main Menu");
-        backButton.setBackground(new Color(255, 140, 0));
+        backButton.setBackground(new Color(231, 203, 203));
         backButton.setForeground(Color.BLACK);
         backButton.addActionListener(e -> goBackToMainMenu());
 
